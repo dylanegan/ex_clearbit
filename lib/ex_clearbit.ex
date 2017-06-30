@@ -4,7 +4,6 @@ defmodule ExClearbit do
   """
   use Application
   use HTTPoison.Base
-  alias ExClearbit.Model.{Person, Company}
   @version Mix.Project.config[:version]
   def version, do: @version
 
@@ -25,53 +24,25 @@ defmodule ExClearbit do
   @doc """
   Query the Clearbit Person API by email
   """
-  @spec person(String.t, Keyword.t) :: Person.t
-  def person(email, params \\ []) do
-    url = "https://person.clearbit.com/v2/people/find"
-    params = [email: email] ++ params
-    response = ExClearbit.API.Base.get(url, [], params)
-    if Map.has_key?(response, "error") do
-      message = response["error"]["message"]
-      type = response["error"]["type"] |> String.to_atom
-      {:error, %{code: type, message: message}}
-    else
-      response |> Person.new
-    end
-  end
-
-  @doc """
-  Query the Clearbit Company API by domain
-  """
-  @spec company(String.t, Keyword.t) :: Company.t
-  def company(domain, params \\ []) do
-    url = "https://company.clearbit.com/v2/companies/find"
-    params = [domain: domain] ++ params
-    response = ExClearbit.API.Base.get(url, [], params)
-    if Map.has_key?(response, "error") do
-      message = response["error"]["message"]
-      type = response["error"]["type"] |> String.to_atom
-      {:error, %{code: type, message: message}}
-    else
-      response |> Company.new
-    end
+  @spec person(String.t, Keyword.t, Keyword.t) :: Person.t
+  def person(email, params \\ [], options \\ []) do
+    ExClearbit.API.Enrichment.person(email, params, options)
   end
 
   @doc """
   Query the Clearbit Combined API by email
   """
-  def combined(email, params \\ []) do
-    url = "https://person.clearbit.com/v2/combined/find"
-    params = [email: email] ++ params
-    response = ExClearbit.API.Base.get(url, [], params)
-    if Map.has_key?(response, "error") do
-      message = response["error"]["message"]
-      type = response["error"]["type"] |> String.to_atom
-      {:error, %{code: type, message: message}}
-    else
-      person = response["person"] |> Person.new
-      company = response["company"] |> Company.new
-      %{person: person, company: company}
-    end
+  @spec combined(String.t, Keyword.t, Keyword.t) :: Map.t
+  def combined(email, params \\ [], options \\ []) do
+    ExClearbit.API.Enrichment.combined(email, params, options)
+  end
+
+  @doc """
+  Query the Clearbit Company API by domain
+  """
+  @spec company(String.t, Keyword.t, Keyword.t) :: Company.t
+  def company(domain, params \\ [], options \\ []) do
+    ExClearbit.API.Enrichment.company(domain, params, options)
   end
 
   @doc """
