@@ -15,7 +15,6 @@ defmodule ExClearbit.API.Base do
     :get |> request(path, "", headers, options) |> Map.get(:body)
   end
 
-
   @doc """
   Makes a generic request to the Clearbit API
   """
@@ -31,11 +30,9 @@ defmodule ExClearbit.API.Base do
     end
   end
 
-
   defp default_headers do
     ["Accept": "application/json", "Content-Type": "application/json", "User-Agent": @user_agent]
   end
-
 
   @doc """
   Ensures that the API Key is set (or at least that the parameter list isn't empty)

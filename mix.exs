@@ -40,6 +40,7 @@ defmodule ExClearbit.Mixfile do
      {:poison, "~> 2.0"},
      {:inflex, "~> 1.7.0"},
      {:exconstructor, "~> 1.0.2"},
-     {:ex_doc, "~> 0.14", only: [:dev]}]
+     {:ex_doc, "~> 0.14", only: [:dev]},
+     {:pit, "~> 1.2.0"}]
   end
 end
